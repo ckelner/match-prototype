@@ -1,6 +1,10 @@
+// TODO: these should be dynamic
+var GLOBE_sqSize = 96;
+var GLOBE_rowWidth = 480;
 $(function() {
 	var gameBoard = $("#game-board");
 	createGrid(gameBoard);
+	setupGrid();
 	setInterval(moveGrid, 20);
 });
 
@@ -31,8 +35,7 @@ function randColor(){
 	}
 }
 
-function moveGrid(){
-	// child array
+function setupGrid(){
 	var kids = $("#game-board").children();
 	kids.each(function( index ) {
 		var domObj = kids[index];
@@ -42,12 +45,22 @@ function moveGrid(){
 		if(domObj.direction === undefined || domObj.direction === null){
 			domObj.direction = randomDirection();
 		}
-		rowAnim(domObj);
+		if(domObj.counter === undefined || domObj.counter === null){
+			domObj.counter = 5;
+		}
+	});
+}
+
+function moveGrid(){
+	// child array
+	var kids = $("#game-board").children();
+	kids.each(function( index ) {
+		rowAnim(kids[index]);
 	});
 }
 
 function randomVelocity(){
-	var rand = (Math.random() * 5) + 1;
+	var rand = Math.floor((Math.random() * 5) + 1);
 	return rand.toString();
 }
 
@@ -74,80 +87,42 @@ function drawMoreSquares(domObj, dir){
 	var offSetNum = offSet.substring(0, offSet.indexOf('p'));
 	switch(dir){
 		case "left":
-			if(offSetNum > 0){
-				newSquareLeft(domObj);
+			if(offSetNum >= 0){
+				newSquare(domObj);
 			}
 		break;
 		case "right":
-			// TODO: 480 is hard-coded row width... should be dynamic
-			if((jQDomObj.width() - offSetNum) < 480){
-				newSquareRight(domObj);
+			if((jQDomObj.width() - offSetNum) < GLOBE_rowWidth){
+				newSquare(domObj);
 			}
 		break;
 	}
 }
 
-function newSquareRight(domObj){
-	var lastId = domObj.children[domObj.children.length-1].id;
-	var colNum = (lastId.substring(3, lastId.length) * 1) + 1;
+function newSquare(domObj){
 	var jQDomObj = $(domObj);
-	jQDomObj.append("<div class='colDiv "+randColor()+"' id='col"+colNum+"'></div>");
+	if(domObj.direction === "left"){
+		var left = jQDomObj.css('left');
+		var newLeft = (left.substring(0, left.indexOf('p')) * -1) - GLOBE_sqSize;
+		jQDomObj.css('left', newLeft);
+	}
 	var wid = jQDomObj.css('width');
 	wid = wid.substring(0, wid.indexOf('p')) * 1;
-	// TODO: should be dynamic
-	jQDomObj.css('width', wid + 96);
-	if(wid > 480 + (96 * 2)){
-		$(domObj.children[0]).remove();
-		jQDomObj.css('width', wid - 96);
-		var offset = jQDomObj.css('right');
-		jQDomObj.css('right', (offset.substring(0, offset.indexOf('p')) * 1) - 96);
+	jQDomObj.css('width', wid + GLOBE_sqSize);
+	if(domObj.direction === "left"){
+		jQDomObj.prepend("<div class='colDiv "+randColor()+"' id='col"+domObj.counter+"'></div>");
+	} else {
+		jQDomObj.append("<div class='colDiv "+randColor()+"' id='col"+domObj.counter+"'></div>");
 	}
-	if(domObj.children.length - 1 > 10){
-		// how many over
-		var overBy = (domObj.children.length - 1) - 12;
-		for(var x = 0; x < overBy - 1; x++){
-			$(domObj.children[x]).remove();
-			/*wid = jQDomObj.css('width');
-			wid = wid.substring(0, wid.indexOf('p')) * 1;
-			jQDomObj.css('width', wid - 96);*/
-			offset = jQDomObj.css('right');
-			jQDomObj.css('right', (offset.substring(0, offset.indexOf('p')) * 1) - 96);
+	domObj.counter++;
+	if(wid > GLOBE_rowWidth + (GLOBE_sqSize * 2)){
+		if(domObj.direction === "left"){
+			$(domObj.children[domObj.children.length - 1]).remove();
+		} else {
+			$(domObj.children[0]).remove();
+			var offset = jQDomObj.css(domObj.direction);
+			jQDomObj.css(domObj.direction, (offset.substring(0, offset.indexOf('p')) * 1) - GLOBE_sqSize);
 		}
-	}
-}
-
-function newSquareLeft(domObj){
-	var lastId = domObj.children[domObj.children.length-1].id;
-	var lastIdNum = (lastId.substring(3, lastId.length) * 1);
-	var firstId = domObj.children[0].id;
-	var firstIdNum = (firstId.substring(3, firstId.length) * 1);
-	var whichNum = lastIdNum + 1;
-	if(firstIdNum > lastIdNum){
-		whichNum = firstIdNum + 1;
-	}
-	var jQDomObj = $(domObj);
-	jQDomObj.prepend("<div class='colDiv "+randColor()+"' id='col"+whichNum+"'></div>");
-	// TODO: 96 is hard-coded col width... should be dynamic
-	jQDomObj.css('width', jQDomObj.width() + 96);
-	var left = jQDomObj.css('left');
-	var newLeft = (left.substring(0, left.indexOf('p')) * -1) - 96;
-	jQDomObj.css('left', newLeft);
-	var wid = jQDomObj.css('width');
-	wid = wid.substring(0, wid.indexOf('p')) * 1;
-	if(wid > 480 + (96 * 2)) {
-		var childLen = domObj.children.length;
-		$(domObj.children[childLen-1]).remove();
-		jQDomObj.css('width', wid - 96);
-	}
-	if(domObj.children.length - 1 > 10){
-		// how many over
-		var overBy = (domObj.children.length -1) - 12;
-		for(var x = 0; x < overBy - 1; x++){
-			var childLen = domObj.children.length;
-			$(domObj.children[childLen-1]).remove();
-			wid = jQDomObj.css('width');
-			wid = wid.substring(0, wid.indexOf('p')) * 1;
-			jQDomObj.css('width', wid - 96);
-		}
+		jQDomObj.css('width', (domObj.children.length * GLOBE_sqSize));
 	}
 }
