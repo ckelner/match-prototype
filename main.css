@@ -1,0 +1,35 @@
+#game-board {
+	/* size from http://developer.android.com/guide/practices/screens_support.html#testing */
+	height: 854px;
+	width: 480px;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	overflow: hidden;
+}
+.rowDiv{
+	border-bottom: 1px solid black;
+	height: 94px;
+	position: relative;
+	overflow: hidden;
+}
+.colDiv{
+	width: 95px;
+	height: 94px;
+	border-right: 1px solid black;
+	float: left;
+}
+.blueCol{
+	background-color: blue;
+}
+.redCol{
+	background-color: red;
+}
+.yellowCol{
+	background-color: yellow;
+}
+.orangeCol{
+	background-color: orange;
+}
+.greenCol{
+	background-color: green;
+}
