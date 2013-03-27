@@ -72,16 +72,15 @@ function drawMoreSquares(domObj, dir){
 	var jQDomObj = $(domObj);
 	var offSet = jQDomObj.css(dir);
 	var offSetNum = offSet.substring(0, offSet.indexOf('p'));
-	var parenWidth = jQDomObjParen.width();
 	switch(dir){
 		case "left":
-			/*if(offSetNum > 0){
+			if(offSetNum > 0){
 				newSquareLeft(domObj);
-			}*/
+			}
 		break;
 		case "right":
 			// TODO: 480 is hard-coded row width... should be dynamic
-			if((domObj.offsetWidth + offSetNum) > 480 + 96){
+			if((jQDomObj.width() - offSetNum) < 480){
 				newSquareRight(domObj);
 			}
 		break;
@@ -97,9 +96,23 @@ function newSquareRight(domObj){
 	wid = wid.substring(0, wid.indexOf('p')) * 1;
 	// TODO: should be dynamic
 	jQDomObj.css('width', wid + 96);
-	if(wid > 480 + (96 * 2)) {
+	if(wid > 480 + (96 * 2)){
 		$(domObj.children[0]).remove();
 		jQDomObj.css('width', wid - 96);
+		var offset = jQDomObj.css('right');
+		jQDomObj.css('right', (offset.substring(0, offset.indexOf('p')) * 1) - 96);
+	}
+	if(domObj.children.length - 1 > 10){
+		// how many over
+		var overBy = (domObj.children.length - 1) - 12;
+		for(var x = 0; x < overBy - 1; x++){
+			$(domObj.children[x]).remove();
+			/*wid = jQDomObj.css('width');
+			wid = wid.substring(0, wid.indexOf('p')) * 1;
+			jQDomObj.css('width', wid - 96);*/
+			offset = jQDomObj.css('right');
+			jQDomObj.css('right', (offset.substring(0, offset.indexOf('p')) * 1) - 96);
+		}
 	}
 }
 
@@ -119,4 +132,22 @@ function newSquareLeft(domObj){
 	var left = jQDomObj.css('left');
 	var newLeft = (left.substring(0, left.indexOf('p')) * -1) - 96;
 	jQDomObj.css('left', newLeft);
+	var wid = jQDomObj.css('width');
+	wid = wid.substring(0, wid.indexOf('p')) * 1;
+	if(wid > 480 + (96 * 2)) {
+		var childLen = domObj.children.length;
+		$(domObj.children[childLen-1]).remove();
+		jQDomObj.css('width', wid - 96);
+	}
+	if(domObj.children.length - 1 > 10){
+		// how many over
+		var overBy = (domObj.children.length -1) - 12;
+		for(var x = 0; x < overBy - 1; x++){
+			var childLen = domObj.children.length;
+			$(domObj.children[childLen-1]).remove();
+			wid = jQDomObj.css('width');
+			wid = wid.substring(0, wid.indexOf('p')) * 1;
+			jQDomObj.css('width', wid - 96);
+		}
+	}
 }
