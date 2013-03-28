@@ -16,7 +16,8 @@ function createGrid(gameBoard){
 	for(var r = 0; r < numOfRows; r++){
 		var rowHTML = "<div class='rowDiv' id='row"+r+"'>";
 		for(var c = 0; c < numOfCols; c++){
-			rowHTML += "<div class='colDiv "+randColor()+"' onmouseover='sqHover(this)' id='col"+c+"'></div>";
+			rowHTML += "<div class='colDiv "+randColor()+"' onmouseover='sqHover(this)'"+
+			" onmouseout='sqMouseOut(this)' id='col"+c+"'></div>";
 		}
 		rowHTML += "</div>"
 		gameBoard.append(rowHTML);
@@ -52,7 +53,6 @@ function setupGrid(){
 }
 
 function moveGrid(){
-	// child array
 	var kids = $("#game-board").children();
 	kids.each(function( index ) {
 		rowAnim(kids[index]);
@@ -72,12 +72,14 @@ function randomDirection(){
 }
 
 function rowAnim(domObj){
-	var jQDomObj = $(domObj);
-	var velocity = (domObj.velocity * 1);
-	var direction = domObj.direction;
-	var offset = jQDomObj.css(direction);
-	jQDomObj.css(direction, (offset.substring(0, offset.indexOf('p')) * 1) + velocity);
-	drawMoreSquares(domObj, direction);
+	if(rowPauseHandler(domObj)){
+		var jQDomObj = $(domObj);
+		var velocity = (domObj.velocity * 1);
+		var direction = domObj.direction;
+		var offset = jQDomObj.css(direction);
+		jQDomObj.css(direction, (offset.substring(0, offset.indexOf('p')) * 1) + velocity);
+		drawMoreSquares(domObj, direction);
+	}
 }
 
 function drawMoreSquares(domObj, dir){
@@ -110,9 +112,11 @@ function newSquare(domObj){
 	wid = wid.substring(0, wid.indexOf('p')) * 1;
 	jQDomObj.css('width', wid + GLOBE_sqSize);
 	if(domObj.direction === "left"){
-		jQDomObj.prepend("<div class='colDiv "+randColor()+"' id='col"+domObj.counter+"'></div>");
+		jQDomObj.prepend("<div class='colDiv "+randColor()+"' onmouseover='sqHover(this)'"+
+			" onmouseout='sqMouseOut(this)' id='col"+domObj.counter+"'></div>");
 	} else {
-		jQDomObj.append("<div class='colDiv "+randColor()+"' id='col"+domObj.counter+"'></div>");
+		jQDomObj.append("<div class='colDiv "+randColor()+"' onmouseover='sqHover(this)'"+
+			" onmouseout='sqMouseOut(this)' id='col"+domObj.counter+"'></div>");
 	}
 	domObj.counter++;
 	if(wid > GLOBE_rowWidth + (GLOBE_sqSize * 2)){
@@ -128,6 +132,20 @@ function newSquare(domObj){
 }
 
 function sqHover(curObj){
-	curObj.pauseAni = true;
+	curObj.parentElement.pauseAni = true;
+	curObj.heldByPlayer = true;
+}
+
+function sqMouseOut(curObj){
+	curObj.parentElement.pauseAni = false;
+	curObj.heldByPlayer = false;
+}
+
+function rowPauseHandler(domObj){
+	if(domObj.pauseAni === undefined || domObj.pauseAni === null || domObj.pauseAni !== true){
+		return true;
+	} else {
+		return false;
+	}
 }
 
