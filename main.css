@@ -22,15 +22,45 @@
 .blueCol{
 	background-color: blue;
 }
+.blueCol:hover{
+	-webkit-box-shadow:0 0 20px #4CD3FC;
+	-moz-box-shadow: 0 0 20px #4CD3FC;
+	box-shadow:0 0 20px #4CD3FC;
+	background-color: #4CD3FC;
+}
 .redCol{
 	background-color: red;
+}
+.redCol:hover{
+	-webkit-box-shadow:0 0 20px #FC4CA7;
+	-moz-box-shadow: 0 0 20px #FC4CA7;
+	box-shadow:0 0 20px #FC4CA7;
+	background-color: #FC4CA7;
 }
 .yellowCol{
 	background-color: yellow;
 }
+.yellowCol:hover{
+	-webkit-box-shadow:0 0 20px #FCFF9E;
+	-moz-box-shadow: 0 0 20px #FCFF9E;
+	box-shadow:0 0 20px #FCFF9E;
+	background-color: #FCFF9E;
+}
 .orangeCol{
 	background-color: orange;
 }
+.orangeCol:hover{
+	-webkit-box-shadow:0 0 20px #FFAA4F;
+	-moz-box-shadow: 0 0 20px #FFAA4F;
+	box-shadow:0 0 20px #FFAA4F;
+	background-color: #FFAA4F;
+}
 .greenCol{
 	background-color: green;
+}
+.greenCol:hover{
+	-webkit-box-shadow:0 0 20px #7AFC56;
+	-moz-box-shadow: 0 0 20px #7AFC56;
+	box-shadow:0 0 20px #7AFC56;
+	background-color: #7AFC56;
 }

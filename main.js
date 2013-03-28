@@ -16,7 +16,7 @@ function createGrid(gameBoard){
 	for(var r = 0; r < numOfRows; r++){
 		var rowHTML = "<div class='rowDiv' id='row"+r+"'>";
 		for(var c = 0; c < numOfCols; c++){
-			rowHTML += "<div class='colDiv "+randColor()+"' id='col"+c+"'></div>";
+			rowHTML += "<div class='colDiv "+randColor()+"' onmouseover='sqHover(this)' id='col"+c+"'></div>";
 		}
 		rowHTML += "</div>"
 		gameBoard.append(rowHTML);
@@ -126,3 +126,8 @@ function newSquare(domObj){
 		jQDomObj.css('width', (domObj.children.length * GLOBE_sqSize));
 	}
 }
+
+function sqHover(curObj){
+	curObj.pauseAni = true;
+}
+
