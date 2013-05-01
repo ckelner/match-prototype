@@ -17,38 +17,16 @@ ig.module(
     score: 0,
     speed: 1,
     init: function() {
-      ig.system.smoothPositioning = false;
-      for( var y = 0; y < 30; y++ ) {    
-        this.map[y] = this.getRow();
-      }
-      var data = [ [1,2,3,4,5] ];
+      this.generateMap();
       var bgmap = new ig.BackgroundMap( 30, this.map, this.tiles );
       this.backgroundMaps.push( bgmap );
     },
-    getRow: function() {
-      var row = [];
-      for( var x = 0; x < 40; x++ ) {
-        row[x] = Math.floor(Math.random()*5) + 1;
-      }
-      return row;
-    },
     update: function() {
-      // Do we need a new row?
-      /*if( this.screen.y > 40 ) {  
-        // Move screen and entities one tile up
-        this.screen.y -= 8;
-        for( var i =0; i < this.entities.length; i++ ) {
-          this.entities[i].pos.y -= 8;
-        }
-        // Delete first row, insert new
-        this.map.shift();
-        this.map.push(this.getRow());
-        // Place coin?
-        if( Math.random() > 0.5 ) {
-          this.placeCoin();
-        }
-      }*/
-      // Update all entities and backgroundMaps
+      this.speed += ig.system.tick * (10/this.speed);
+      this.screen.x += ig.system.tick * this.speed;
+      if( Math.round( this.screen.x % 11 ) == 0 ) {
+        this.maintainColumns();
+      }
       this.parent();
     },
     draw: function() {
@@ -56,8 +34,35 @@ ig.module(
         this.backgroundMaps[i].draw();
       }
       this.parent();
+    },
+    generateMap: function() {
+      // rows
+      for( var y = 0; y < 8; y++ ) {
+        // cols
+        this.map[y] = this.generateColumn();
+      }
+    },
+    generateColumn: function() {
+      var col = [];
+      for( var x = 0; x < 11; x++ ) {
+        col[x] = this.randomTile();
+      }
+      return col;
+    },
+    randomTile: function() {
+      return Math.floor(Math.random()*5) + 1;
+    },
+    maintainColumns: function() {
+      for( var y = 0; y < 8; y++ ) {
+          for( var x = 0; x <= 11; x++ ) {
+            if( x != 11) {
+              this.map[y][x] = this.map[y][x + 1];
+            } else {
+              this.map[y][x] = this.randomTile();
+            }
+          }
+      }
     }
   });
-  // Start the Game with 60fps, a resolution of 320x240, scaled up by a factor of 2
   ig.main( '#canvas', MatchGame, 60, 320, 240, 2 );
 });
