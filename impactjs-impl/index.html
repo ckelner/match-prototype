@@ -11,7 +11,6 @@
 			padding: 0;
 			font-size: 12pt;
 		}
-		
 		#canvas {
 			position: absolute;
 			left: 0;
@@ -20,6 +19,20 @@
 			bottom: 0;
 			margin: auto;
 		}
+		#debugBox {
+			border: 1px solid white;
+			color: white;
+			width: 500px;
+			height: 150px;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			font-size: .8em;
+			padding: 2px;
+		}
+		#debugBox ul {
+			margin: 1px;
+		}
 	</style>
 
 	<script type="text/javascript" src="lib/impact/impact.js"></script>
@@ -27,5 +40,18 @@
 </head>
 <body>
 	<canvas id="canvas"></canvas>
+	<br>
+	<br>
+	<br>
+	<div id="debugBox">
+		<ul>
+			<li id="screenX">
+			</li>
+			<li id="speed">
+			</li>
+			<li id="tick">
+			</li>
+		</ul>
+	</div>
 </body>
 </html>
