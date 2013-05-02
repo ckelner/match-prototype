@@ -16,6 +16,7 @@ ig.module(
     map: [],
     score: 0,
     speed: 1,
+    resetStamp: new Date().getTime(),
     init: function() {
       this.generateMap();
       var bgmap = new ig.BackgroundMap( 30, this.map, this.tiles );
@@ -24,8 +25,14 @@ ig.module(
     update: function() {
       this.speed += ig.system.tick * (10/this.speed);
       this.screen.x += ig.system.tick * this.speed;
-      if( Math.round( this.screen.x % 11 ) == 0 ) {
-        this.maintainColumns();
+      //console.log("screenx%30result="+this.screen.x % 30)
+      if(this.screen.x % 30 > 0 && this.screen.x % 30 < 0.7 && this.speed > 2) {
+        var ts = new Date().getTime();
+        if((ts - this.resetStamp) / 100 > 10) {
+          this.maintainColumns();
+          this.screen.x = 0;
+          this.resetStamp = ts;
+        }
       }
       this.parent();
     },
