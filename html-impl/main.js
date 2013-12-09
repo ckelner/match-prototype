@@ -156,64 +156,68 @@ function newSquare(domObj){
 function sqHover(curObj){
   //DEBUG
   logToDOM("user hovered");
-  if( checkFirstPauseRow(curObj) !== null ) {
-    logToDOM("Sq Array > 0 and top/bottom row");
+  var winner = checkIfWinner(curObj);
+  if( checkFirstPauseRow(curObj) !== null && winner === false ) {
     clearTimeouts();
     clearPauseAndSqArray();
   }
-  // see if the player has hovered over anything (successfully) yet
-  if( GLOBE_playerCurHoverArr.length > 0 ) {
-    // get the last object the player hovered over
-    var prevObj = GLOBE_playerCurHoverArr[ GLOBE_playerCurHoverArr.length - 1 ];
-    if( prevObj !== undefined && prevObj !== null && prevObj != curObj ) {
-      // compare the previous color with the current
-      if( prevObj.attributes.game_color.value === curObj.attributes.game_color.value ) {
-        var continuePath = false;
-        var previousRow = prevObj.parentElement.id.substring(3,4) * 1;
-        var currentRow = curObj.parentElement.id.substring(3,4) * 1;
-        switch( GLOBE_playerDirection ) {
-          case "down":
-            if( previousRow < currentRow ) {
-              continuePath = true;
-            } else {
+  if( winner === false ) {
+    // see if the player has hovered over anything (successfully) yet
+    if( GLOBE_playerCurHoverArr.length > 0 ) {
+      // get the last object the player hovered over
+      var prevObj = GLOBE_playerCurHoverArr[ GLOBE_playerCurHoverArr.length - 1 ];
+      if( prevObj !== undefined && prevObj !== null && prevObj != curObj ) {
+        // compare the previous color with the current
+        if( prevObj.attributes.game_color.value === curObj.attributes.game_color.value ) {
+          var continuePath = false;
+          var previousRow = prevObj.parentElement.id.substring(3,4) * 1;
+          var currentRow = curObj.parentElement.id.substring(3,4) * 1;
+          switch( GLOBE_playerDirection ) {
+            case "down":
+              if( previousRow < currentRow ) {
+                continuePath = true;
+              } else {
+                continuePath = false;
+              }
+            break;
+            case "up":
+              if( currentRow < previousRow ) {
+                continuePath = true;
+              } else {
+                continuePath = false;
+              }
+            break;
+            default:
               continuePath = false;
-            }
-          break;
-          case "up":
-            if( currentRow < previousRow ) {
-              continuePath = true;
-            } else {
-              continuePath = false;
-            }
-          break;
-          default:
-            continuePath = false;
-          break;
-        }
-        if( continuePath ) {
-          clearTimeouts();
-          pauseSq(prevObj);
-          pauseSq(curObj);
-          addSq(curObj);
+            break;
+          }
+          if( continuePath ) {
+            clearTimeouts();
+            pauseSq(prevObj);
+            pauseSq(curObj);
+            addSq(curObj);
+          } else {
+            brokenPatten();
+          }
         } else {
           brokenPatten();
         }
       } else {
-        brokenPatten();
+        clearTimeouts();
+        // else we do nothing - same fucking object
+        logToDOM("javascript thinks these fucking objects are the same")
       }
     } else {
-      clearTimeouts();
-      // else we do nothing - same fucking object
-      logToDOM("javascript thinks these fucking objects are the same")
+      GLOBE_playerDirection = checkFirstPauseRow(curObj);
+      if( GLOBE_playerDirection !== null ){
+        clearTimeouts();
+        clearPauseAndSqArray();
+        pauseSq(curObj);
+        addSq(curObj);
+      }
     }
   } else {
-    GLOBE_playerDirection = checkFirstPauseRow(curObj);
-    if( GLOBE_playerDirection !== null ){
-      clearTimeouts();
-      clearPauseAndSqArray();
-      pauseSq(curObj);
-      addSq(curObj);
-    }
+    winnerAction();
   }
 }
 
@@ -272,4 +276,18 @@ function clearTimeouts(){
     clearTimeout( timeoutId );
   });
   GLOBE_unHoverTimeoutIdArr = [ ];
+}
+
+function checkIfWinner(curObj){
+  var firstLastRow = checkFirstPauseRow(curObj);
+  if( firstLastRow !== null ) { // < got first or last
+    if( GLOBE_playerCurHoverArr.length >= 7 ) { // < with 8 rows
+      return true;
+    }
+  }
+  return false;
+}
+
+function winnerAction(){
+  alert("Winner winner chicken dinner!");
 }
