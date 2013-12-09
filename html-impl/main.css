@@ -64,3 +64,11 @@
 	box-shadow:0 0 20px #7AFC56;
 	background-color: #7AFC56;
 }
+#DOMLogging{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 400px;
+  width: 400px;
+  overflow: scroll;
+}

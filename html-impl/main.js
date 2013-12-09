@@ -1,19 +1,36 @@
 // TODO: these should be dynamic
-var GLOBE_sqSize = 96;
-var GLOBE_rowWidth = 480;
+// TODO: probably want to throw these in an object
+var GLOBE_sqSize = 96,
+    GLOBE_rowWidth = 480,
+    GLOBE_playerCurHoverArr = [ ],
+    GLOBE_unHoverTimeoutIdArr = [ ],
+    GLOBE_playerDirection = "top",
+    GLOBE_numOfRows = 9,
+    GLOBE_domLog = null;
+
 $(function() {
 	var gameBoard = $("#game-board");
 	createGrid(gameBoard);
 	setupGrid();
+  setupDOMLogging();
 	setInterval(moveGrid, 20);
 });
 
+function setupDOMLogging(){
+  GLOBE_domLog = $("#DOMLogging")[0];
+}
+
+function logToDOM(msg){
+  GLOBE_domLog.innerHTML += msg + "<br>";
+  console.log(msg);
+  GLOBE_domLog.scrollTop = GLOBE_domLog.scrollHeight;
+}
+
 function createGrid(gameBoard){
-	var numOfRows = 9;
-	var rows = gameBoard.width() / numOfRows;
+	var rows = gameBoard.width() / GLOBE_numOfRows;
 	var numOfCols = 5;
 	var columns = gameBoard.height() / numOfCols;
-	for(var r = 0; r < numOfRows; r++){
+	for(var r = 0; r < GLOBE_numOfRows; r++){
 		var rowHTML = "<div class='rowDiv' id='row"+r+"'>";
 		for(var c = 0; c < numOfCols; c++){
 			rowHTML += writeRow(randColor(), c);
@@ -24,7 +41,7 @@ function createGrid(gameBoard){
 }
 
 function writeRow(color, num){
-	return "<div class='colDiv "+color+"' onmouseover='sqHover(this)' onmouseout='sqOut(this)' id='col"+num+"'></div>"
+	return "<div class='colDiv "+color+"' game_Color='"+color+"' onmouseover='sqHover(this)' onmouseout='sqOut(this)' id='col"+num+"'></div>"
 }
 
 function randColor(){
@@ -137,9 +154,122 @@ function newSquare(domObj){
 }
 
 function sqHover(curObj){
-	curObj.parentElement.pauseAni = true;
+  //DEBUG
+  logToDOM("user hovered");
+  if( checkFirstPauseRow(curObj) !== null ) {
+    logToDOM("Sq Array > 0 and top/bottom row");
+    clearTimeouts();
+    clearPauseAndSqArray();
+  }
+  // see if the player has hovered over anything (successfully) yet
+  if( GLOBE_playerCurHoverArr.length > 0 ) {
+    // get the last object the player hovered over
+    var prevObj = GLOBE_playerCurHoverArr[ GLOBE_playerCurHoverArr.length - 1 ];
+    if( prevObj !== undefined && prevObj !== null && prevObj != curObj ) {
+      // compare the previous color with the current
+      if( prevObj.attributes.game_color.value === curObj.attributes.game_color.value ) {
+        var continuePath = false;
+        var previousRow = prevObj.parentElement.id.substring(3,4) * 1;
+        var currentRow = curObj.parentElement.id.substring(3,4) * 1;
+        switch( GLOBE_playerDirection ) {
+          case "down":
+            if( previousRow < currentRow ) {
+              continuePath = true;
+            } else {
+              continuePath = false;
+            }
+          break;
+          case "up":
+            if( currentRow < previousRow ) {
+              continuePath = true;
+            } else {
+              continuePath = false;
+            }
+          break;
+          default:
+            continuePath = false;
+          break;
+        }
+        if( continuePath ) {
+          clearTimeouts();
+          pauseSq(prevObj);
+          pauseSq(curObj);
+          addSq(curObj);
+        } else {
+          brokenPatten();
+        }
+      } else {
+        brokenPatten();
+      }
+    } else {
+      clearTimeouts();
+      // else we do nothing - same fucking object
+      logToDOM("javascript thinks these fucking objects are the same")
+    }
+  } else {
+    GLOBE_playerDirection = checkFirstPauseRow(curObj);
+    if( GLOBE_playerDirection !== null ){
+      clearTimeouts();
+      clearPauseAndSqArray();
+      pauseSq(curObj);
+      addSq(curObj);
+    }
+  }
+}
+
+// check if row is at very top or bottom
+function checkFirstPauseRow(sqObj){
+  // GLOBE_playerDirection: up, down (more to come?)
+  // number of rows limited to: GLOBE_numOfRows
+  switch(sqObj.parentElement.id){
+    case 'row0':
+      return "down";
+    break;
+    case 'row8':
+      return "up";
+    break;
+    default:
+      return null; // started in the middle - BAD
+    break;
+  }
+}
+
+function pauseSq(sqObj){
+  sqObj.parentElement.pauseAni = true;
+}
+
+function unPauseSq(sqObj){
+  sqObj.parentElement.pauseAni = false;
+}
+
+function brokenPatten(){
+  //DEBUG
+  logToDOM("detect break in the pattern");
+  clearPauseAndSqArray();
+}
+
+function clearPauseAndSqArray(){
+  $.each( GLOBE_playerCurHoverArr, function( i, sqObj ){
+    unPauseSq(sqObj);
+  });
+  GLOBE_playerCurHoverArr = [ ];
+  clearTimeouts();
+}
+
+function addSq(sqObj){
+  GLOBE_playerCurHoverArr.push(sqObj);
 }
 
 function sqOut(curObj){
-	curObj.parentElement.pauseAni = false;
+  //DEBUG
+  logToDOM("user unhovered");
+  var timeoutId = setTimeout(brokenPatten, 2000);
+  GLOBE_unHoverTimeoutIdArr.push( timeoutId );
+}
+
+function clearTimeouts(){
+  $.each( GLOBE_unHoverTimeoutIdArr, function( i, timeoutId ){
+    clearTimeout( timeoutId );
+  });
+  GLOBE_unHoverTimeoutIdArr = [ ];
 }
