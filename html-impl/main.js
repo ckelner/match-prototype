@@ -156,19 +156,19 @@ function newSquare(domObj){
 function sqHover(curObj){
   //DEBUG
   logToDOM("user hovered");
-  var winner = checkIfWinner(curObj);
   if( checkFirstPauseRow(curObj) !== null && winner === false ) {
     clearTimeouts();
     clearPauseAndSqArray();
   }
-  if( winner === false ) {
-    // see if the player has hovered over anything (successfully) yet
-    if( GLOBE_playerCurHoverArr.length > 0 ) {
-      // get the last object the player hovered over
-      var prevObj = GLOBE_playerCurHoverArr[ GLOBE_playerCurHoverArr.length - 1 ];
-      if( prevObj !== undefined && prevObj !== null && prevObj != curObj ) {
-        // compare the previous color with the current
-        if( prevObj.attributes.game_color.value === curObj.attributes.game_color.value ) {
+  // see if the player has hovered over anything (successfully) yet
+  if( GLOBE_playerCurHoverArr.length > 0 ) {
+    // get the last object the player hovered over
+    var prevObj = GLOBE_playerCurHoverArr[ GLOBE_playerCurHoverArr.length - 1 ];
+    if( prevObj !== undefined && prevObj !== null && prevObj != curObj ) {
+      // compare the previous color with the current
+      if( prevObj.attributes.game_color.value === curObj.attributes.game_color.value ) {
+        var winner = checkIfWinner(curObj);
+        if( winner === false ) {
           var continuePath = false;
           var previousRow = prevObj.parentElement.id.substring(3,4) * 1;
           var currentRow = curObj.parentElement.id.substring(3,4) * 1;
@@ -200,24 +200,24 @@ function sqHover(curObj){
             brokenPatten();
           }
         } else {
-          brokenPatten();
+          winnerAction();
         }
       } else {
-        clearTimeouts();
-        // else we do nothing - same fucking object
-        logToDOM("javascript thinks these fucking objects are the same")
+        brokenPatten();
       }
     } else {
-      GLOBE_playerDirection = checkFirstPauseRow(curObj);
-      if( GLOBE_playerDirection !== null ){
-        clearTimeouts();
-        clearPauseAndSqArray();
-        pauseSq(curObj);
-        addSq(curObj);
-      }
+      clearTimeouts();
+      // else we do nothing - same fucking object
+      logToDOM("javascript thinks these fucking objects are the same")
     }
   } else {
-    winnerAction();
+    GLOBE_playerDirection = checkFirstPauseRow(curObj);
+    if( GLOBE_playerDirection !== null ){
+      clearTimeouts();
+      clearPauseAndSqArray();
+      pauseSq(curObj);
+      addSq(curObj);
+    }
   }
 }
 
