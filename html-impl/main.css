@@ -1,68 +1,68 @@
 #game-board {
-	/* size from http://developer.android.com/guide/practices/screens_support.html#testing */
-	height: 854px;
-	width: 480px;
-	border-left: 1px solid black;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-	overflow: hidden;
+  /* size from http://developer.android.com/guide/practices/screens_support.html#testing */
+  height: 854px;
+  width: 480px;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  overflow: hidden;
 }
 .rowDiv{
-	border-bottom: 1px solid black;
-	height: 94px;
-	position: relative;
-	overflow: hidden;
+  border-bottom: 1px solid black;
+  height: 94px;
+  position: relative;
+  overflow: hidden;
 }
 .colDiv{
-	width: 95px;
-	height: 94px;
-	border-right: 1px solid black;
-	float: left;
+  width: 95px;
+  height: 94px;
+  border-right: 1px solid black;
+  float: left;
 }
 .blueCol{
-	background-color: blue;
+  background-color: blue;
 }
 .blueCol:hover{
-	-webkit-box-shadow:0 0 20px #4CD3FC;
-	-moz-box-shadow: 0 0 20px #4CD3FC;
-	box-shadow:0 0 20px #4CD3FC;
-	background-color: #4CD3FC;
+  -webkit-box-shadow:0 0 20px #4CD3FC;
+  -moz-box-shadow: 0 0 20px #4CD3FC;
+  box-shadow:0 0 20px #4CD3FC;
+  background-color: #4CD3FC;
 }
 .redCol{
-	background-color: red;
+  background-color: red;
 }
 .redCol:hover{
-	-webkit-box-shadow:0 0 20px #FC4CA7;
-	-moz-box-shadow: 0 0 20px #FC4CA7;
-	box-shadow:0 0 20px #FC4CA7;
-	background-color: #FC4CA7;
+  -webkit-box-shadow:0 0 20px #FC4CA7;
+  -moz-box-shadow: 0 0 20px #FC4CA7;
+  box-shadow:0 0 20px #FC4CA7;
+  background-color: #FC4CA7;
 }
 .yellowCol{
-	background-color: yellow;
+  background-color: yellow;
 }
 .yellowCol:hover{
-	-webkit-box-shadow:0 0 20px #FCFF9E;
-	-moz-box-shadow: 0 0 20px #FCFF9E;
-	box-shadow:0 0 20px #FCFF9E;
-	background-color: #FCFF9E;
+  -webkit-box-shadow:0 0 20px #FCFF9E;
+  -moz-box-shadow: 0 0 20px #FCFF9E;
+  box-shadow:0 0 20px #FCFF9E;
+  background-color: #FCFF9E;
 }
 .orangeCol{
-	background-color: orange;
+  background-color: orange;
 }
 .orangeCol:hover{
-	-webkit-box-shadow:0 0 20px #FFAA4F;
-	-moz-box-shadow: 0 0 20px #FFAA4F;
-	box-shadow:0 0 20px #FFAA4F;
-	background-color: #FFAA4F;
+  -webkit-box-shadow:0 0 20px #FFAA4F;
+  -moz-box-shadow: 0 0 20px #FFAA4F;
+  box-shadow:0 0 20px #FFAA4F;
+  background-color: #FFAA4F;
 }
 .greenCol{
-	background-color: green;
+  background-color: green;
 }
 .greenCol:hover{
-	-webkit-box-shadow:0 0 20px #7AFC56;
-	-moz-box-shadow: 0 0 20px #7AFC56;
-	box-shadow:0 0 20px #7AFC56;
-	background-color: #7AFC56;
+  -webkit-box-shadow:0 0 20px #7AFC56;
+  -moz-box-shadow: 0 0 20px #7AFC56;
+  box-shadow:0 0 20px #7AFC56;
+  background-color: #7AFC56;
 }
 #DOMLogging{
   position: absolute;
